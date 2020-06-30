@@ -35,7 +35,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(): void {
     // set starting location of map
-    this.map = leaflet.map('mapDOM', { zoom: 4, zoomControl: false });
+    this.map = leaflet.map('mapDOM', { zoom: 4, zoomControl: false, zoomSnap: 0.25 });
 
     // make map tiles and add to map object
     const tiles = leaflet.tileLayer(
@@ -55,6 +55,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     // set map to center on user's current location
     this.map.locate({ setView: true, maxZoom: 4 });
+
+    // for testing
+    this.map.on('click', this.logMapClick);
   }
 
   async addMarkers() {
@@ -66,30 +69,59 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     // mock data for other people locations
     let peopleLocations = [
-      {name: 'Karen Crane', relationship: 'Mom', city: 'Tofino', country: 'Canada', coords: {lat: 49.145248, lon: -125.891357}},
-      {name: 'Lyndon Chan', relationship: 'Dad', city: 'Tofino', country: 'Canada', coords: {lat: 49.145248, lon: -125.891357}},
-      {name: 'Daeshim Crane', relationship: 'Uncle', city: 'Toronto', country: 'Canada', coords: {lat: 43.653225, lon: -79.383186}},
-      {name: 'Kaula Chan', relationship: 'Aunt', city: 'San Diego', country: 'USA', coords: {lat: 32.715736, lon: -117.161087}},
-      {name: 'Sagira Crane', relationship: 'Cousin', city: 'Edmonton', country: 'Canada', coords: {lat: 53.544388, lon: -113.490929}},
-      {name: 'Bryan Chan', relationship: 'Brother', city: 'Calgary', country: 'Canada', coords: {lat: 50.970970, lon: -114.043988}},
-      {name: 'Nicole Kaper', relationship: 'Sister in Law', city: 'Calgary', country: 'Canada', coords: {lat: 50.970970, lon: -114.043988}},
-      {name: 'Staffan Nilsson', relationship: 'Brother in Law', city: 'Toronto', country: 'Canada', coords: {lat: 43.691, lon: -79.330878}},
-      {name: 'Gwendolyn Chan', relationship: 'Sister', city: 'Toronto', country: 'Canada', coords: {lat: 43.691, lon: -79.330878}},
-      {name: 'Radek Cerny', relationship: 'Cousin', city: 'Zurich', country: 'Switzerland', coords: {lat: 47.370244, lon: 8.518059}},
-      {name: 'Sage Johnston', relationship: 'Cousin', city: 'Miami', country: 'USA', coords: {lat: 25.759879, lon: -80.252840}},
-      {name: 'Hazell Mosley', relationship: 'Cousin', city: 'St. John\'s', country: 'Canada', coords: {lat: 47.579418, lon: -52.718021}}
+      { name: 'Karen Crane', institution: 'UBC', relationship: 'Mom', city: 'Tofino', country: 'Canada', coords: { lat: 49.151286, lon: -125.904908 } },
+      { name: 'Lyndon Chan', institution: 'UBC', relationship: 'Dad', city: 'Tofino', country: 'Canada', coords: { lat: 49.145248, lon: -125.891357 } },
+      { name: 'Daeshim Crane', institution: 'UBC', relationship: 'Uncle', city: 'Yellow Knife', country: 'Canada', coords: { lat: 62.405886, lon: -114.363304 }},
+      { name: 'Kaula Chan', institution: 'UBC', relationship: 'Aunt', city: 'San Diego', country: 'USA', coords: { lat: 32.715736, lon: -117.161087 } },
+      { name: 'Sagira Crane', institution: 'UBC', relationship: 'Cousin', city: 'Edmonton', country: 'Canada', coords: { lat: 53.544388, lon: -113.490929 } },
+      { name: 'Bryan Chan', institution: 'UBC', relationship: 'Brother', city: 'Calgary', country: 'Canada', coords: { lat: 50.970970, lon: -114.043988 } },
+      { name: 'Radek Cerny', institution: 'UBC', relationship: 'Cousin', city: 'Zurich', country: 'Switzerland', coords: { lat: 47.370244, lon: 8.518059 } },
+      { name: 'Nicole Kaper', institution: 'UBC', relationship: 'Sister in Law', city: 'Calgary', country: 'Canada', coords: { lat: 50.870970, lon: -114.043988 } },
+      { name: 'Staffan Nilsson', institution: 'UBC', relationship: 'Brother in Law', city: 'Toronto', country: 'Canada', coords: { lat: 43.691, lon: -79.330878 } },
+      { name: 'Gwendolyn Chan', institution: 'UBC', relationship: 'Sister', city: 'Toronto', country: 'Canada', coords: { lat: 43.653225, lon: -79.383186 } },
+      { name: 'Sage Johnston', institution: 'UBC', relationship: 'Cousin', city: 'Miami', country: 'USA', coords: { lat: 25.759879, lon: -80.252840 } },
+      { name: 'Hazell Mosley', institution: 'UBC', relationship: 'Cousin', city: 'St. John\'s', country: 'Canada', coords: { lat: 47.579418, lon: -52.718021 } }
     ];
 
-    // loop through people and add markers for each
-    for (let person of peopleLocations) {
-      let marker = leaflet.marker(person.coords, {icon: this.personIcon});
+    // loop through people
+    for (let [index, person] of peopleLocations.entries()) {
+
+      // add markers for each person
+      let marker = leaflet.marker(person.coords, { icon: this.personIcon });
+
+      // add popup for each person
+      let popupOptions = {minWidth: 300, maxWidth: 600}
+      let popup = leaflet.popup(popupOptions).setContent(
+        `
+        <div class="container-fluid">
+          <div class="row">
+              <div class="col-3">
+                  <img src="assets/profile/${index + 1}.png" class="rounded float-left img-fluid">
+              </div>
+              <div class="col-9">
+                  <div class="row">
+                      <h4>${person.name}</h4>
+                  </div>
+                  <!-- for VFC -->
+                  <div class="row"><b>Relationship: </b> ${person.relationship}</div>
+                  <!-- for Andreas -->
+                  <!-- <div class="row"><b>Home Institution: </b> ${person.institution}</div> -->
+                  <div class="row"><b>Location: </b> ${person.city}, ${person.country}</div>
+              </div>
+            </div>
+        </div>
+        `
+      );
+
+      marker.bindPopup(popup);
       marker.addTo(this.map);
+
     }
   }
 
   async getUserLocation() {
     // default to city of vancouver coordinates
-    let res = {lat: 49.282, lon: -123.116};
+    let res = { lat: 49.282, lon: -123.116 };
 
     try {
       const position = await this.getCoordinates();
@@ -112,5 +144,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
   }
+
+  // for testing
+  logMapClick(e) {
+    console.log(e.latlng);
+  }
+
 
 }
