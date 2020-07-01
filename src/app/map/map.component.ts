@@ -35,7 +35,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(): void {
     // set starting location of map
-    this.map = leaflet.map('mapDOM', { zoom: 4, zoomControl: false, zoomSnap: 0.25 });
+    this.map = leaflet.map('mapDOM', { zoom: 4, zoomControl: false, zoomSnap: 0.25, worldCopyJump: true });
 
     // make map tiles and add to map object
     const tiles = leaflet.tileLayer(
@@ -65,12 +65,34 @@ export class MapComponent implements OnInit, AfterViewInit {
     let userlatlon = await this.getUserLocation();
     let userMarker = leaflet.marker(userlatlon, { icon: this.userIcon });
 
+    // add popup for user
+    let popupOptions = {minWidth: 300, maxWidth: 600}
+    let userPopup = leaflet.popup(popupOptions).setContent(
+      `
+      <div class="container-fluid">
+        <div class="row">
+            <div class="col-3">
+                <img src="assets/profile/user.png" class="rounded float-left img-fluid">
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <h4>Me</h4>
+                </div>
+                <div class="row"><b>Coordinates: </b> ${userlatlon.lat.toFixed(3)}, ${userlatlon.lon.toFixed(3)}</div>
+            </div>
+          </div>
+      </div>
+      `
+    );
+
+    userMarker.bindPopup(userPopup);
+
     userMarker.addTo(this.map);
 
     // mock data for other people locations
     let peopleLocations = [
-      { name: 'Karen Crane', institution: 'UBC', relationship: 'Mom', city: 'Tofino', country: 'Canada', coords: { lat: 49.151286, lon: -125.904908 } },
-      { name: 'Lyndon Chan', institution: 'UBC', relationship: 'Dad', city: 'Tofino', country: 'Canada', coords: { lat: 49.145248, lon: -125.891357 } },
+      { name: 'Karen Crane', institution: 'University of British', relationship: 'Mom', city: 'Tofino', country: 'Canada', coords: { lat: 49.151286, lon: -125.904908 } },
+      { name: 'Lyndon Chan', institution: 'UB', relationship: 'Dad', city: 'Tofino', country: 'Canada', coords: { lat: 49.145248, lon: -125.891357 } },
       { name: 'Daeshim Crane', institution: 'UBC', relationship: 'Uncle', city: 'Yellow Knife', country: 'Canada', coords: { lat: 62.405886, lon: -114.363304 }},
       { name: 'Kaula Chan', institution: 'UBC', relationship: 'Aunt', city: 'San Diego', country: 'USA', coords: { lat: 32.715736, lon: -117.161087 } },
       { name: 'Sagira Crane', institution: 'UBC', relationship: 'Cousin', city: 'Edmonton', country: 'Canada', coords: { lat: 53.544388, lon: -113.490929 } },
@@ -90,7 +112,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       let marker = leaflet.marker(person.coords, { icon: this.personIcon });
 
       // add popup for each person
-      let popupOptions = {minWidth: 300, maxWidth: 600}
       let popup = leaflet.popup(popupOptions).setContent(
         `
         <div class="container-fluid">
