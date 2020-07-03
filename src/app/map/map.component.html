@@ -1,4 +1,11 @@
-<router-outlet></router-outlet>
+<div class="position-absolute">
+    <div class="card ml-4 mt-4">
+        <div class="input-group">
+            <input class="form-control" type="text" autocomplete="no" placeholder="Search by name..."
+                [formControl]="search" (focus)="searchByName()" (keyup)="searchByName()">
+        </div>
+    </div>
+</div>
 <div class="map-container">
     <div class="h-100" id="mapDOM"></div>
 </div>
