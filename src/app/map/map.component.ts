@@ -92,7 +92,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.map.locate({ setView: true, maxZoom: 4 });
 
     // for testing
-    this.map.on('click', this.logMapClick);
+    this.map.on('click', this.mapClick);
   }
 
   async addMarkers() {
@@ -189,8 +189,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // for testing
-  logMapClick(e) {
+  hideDropdown() {
+    console.log('hide');
+    this.matches = [];
+  }
+
+  mapClick(e) {
     console.log(e.latlng);
   }
 
@@ -229,5 +233,16 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   trackItem(index, item) {
     return item.id;
+  }
+
+  selectPerson(person) {
+    console.log(person);
+
+    // clear matches list (this will hide the list in the UI)
+    this.matches = [];
+
+    this.map.flyTo(person.coords, 13, {animate: true});
+
+
   }
 }

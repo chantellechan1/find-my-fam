@@ -1,11 +1,15 @@
 <div class="position-absolute">
     <div class="card ml-4 mt-4">
-        <div class="input-group">
-            <input class="form-control" type="text" autocomplete="no" placeholder="Search by name..."
-                [formControl]="search" (focus)="searchByName()" (keyup)="searchByName()">
+        <input class="form-control" type="text" autocomplete="no" placeholder="Search by name..." [formControl]="search"
+            (focus)="searchByName()" (keyup)="searchByName()">
+        <div class="list-group overflow-auto" *ngIf="matches.length > 0">
+            <button class="list-group-item list-group-item-primary list-group-item-action"
+                *ngFor="let person of matches; trackBy: trackItem" (click)="selectPerson(person)">
+                {{person.name}}
+            </button>
         </div>
     </div>
 </div>
-<div class="map-container">
+<div class="map-container" (click)="hideDropdown()">
     <div class="h-100" id="mapDOM"></div>
 </div>
