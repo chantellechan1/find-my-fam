@@ -163,6 +163,15 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
+  async goToUser() {
+    let userLatLon = await this.getUserLocation();
+
+    // clear matches list (this will hide the list in the UI)
+    this.matches = [];
+
+    this.map.flyTo(userLatLon, 13, {animate: true});
+  }
+
   async getUserLocation() {
     // default to city of vancouver coordinates
     let res = { lat: 49.282, lon: -123.116 };

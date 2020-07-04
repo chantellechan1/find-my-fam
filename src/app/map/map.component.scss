@@ -15,16 +15,21 @@
   z-index: 999;
 }
 
+.from-bottom {
+  bottom: 1vw;
+  left: 1vw;
+  max-width: 5vh;
+  max-height: 5vh;
+  background-color: #00039c;
+  border-radius: 5px;
+}
+
+.from-bottom:hover {
+  cursor: pointer;
+}
+
 .list-group {
   max-height: 75vh;
-}
-
-.fa-search {
-  color: #636363;
-}
-
-.input-group-prepend {
-  background-color: #ffffff;
 }
 
 // custom scroll bar
