@@ -44,6 +44,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * icon set called [Gradient Design by Nolan](https://icons8.com/icons/nolan)
 
 ## TODO:
-[] add search bar for search by name or city
-[] add more people dots, maybe a square for friends??
-[] add a legend
+[ ] add search bar for search by name or city  
+[ ] add more people dots, maybe a square for friends??  
+[ ] add a legend  
