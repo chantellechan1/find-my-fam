@@ -7,7 +7,7 @@ permalink: /docs/index.html
 A mapping project to determine where members of a jet-setting family are at the current time.  
 * This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.6.
 
-![app screenshot](https://imgur.com/a/8nYzkEA)
+![app screenshot](https://i.imgur.com/AzR5TdC.jpg)
 
 ## Development server
 
